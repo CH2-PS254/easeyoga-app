@@ -13,7 +13,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
-        android:text="@string/welcome_login"
+        android:text="@string/create_an_account"
         android:textSize="25sp"
         android:textStyle="bold" />
 
@@ -24,15 +24,27 @@
         android:layout_below="@+id/textViewWelcome"
         android:layout_marginTop="0dp"
         android:layout_marginStart="8dp"
-        android:text="@string/sub_welcome"
+        android:text="@string/let_s_yoga_together"
         android:textSize="14sp" />
+
+    <com.dicoding.capstone_ch2ps254.customview.EtName
+        android:id="@+id/editTextName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textViewSubtitle"
+        android:layout_marginTop="32dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:hint="@string/name"
+        android:inputType="textPersonName"
+        android:autofillHints="Name" />
 
     <com.dicoding.capstone_ch2ps254.customview.EtEmail
         android:id="@+id/editTextEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/textViewSubtitle"
-        android:layout_marginTop="32dp"
+        android:layout_below="@id/editTextName"
+        android:layout_marginTop="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:hint="@string/email"
@@ -52,7 +64,7 @@
         android:autofillHints="Password" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/buttonLogin"
+        android:id="@+id/buttonSignUp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/editTextPassword"
@@ -60,27 +72,27 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:backgroundTint="#F26522"
-        android:text="@string/login"
+        android:text="@string/signup"
         app:cornerRadius="8dp" />
 
     <TextView
         android:id="@+id/textViewSignUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/buttonLogin"
+        android:layout_below="@id/buttonSignUp"
         android:layout_marginTop="16dp"
         android:layout_marginStart="8dp"
-        android:text="@string/don_t_have_an_account_yet"
+        android:text="@string/already_have_an_account"
         android:textSize="16sp"/>
 
     <TextView
-        android:id="@+id/textViewSignUpBold"
+        android:id="@+id/textViewSignInBold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/buttonLogin"
+        android:layout_below="@id/buttonSignUp"
         android:layout_marginTop="16dp"
         android:layout_toEndOf="@id/textViewSignUp"
-        android:text="@string/sign_up"
+        android:text="@string/sign_in"
         android:textColor="#F16522"
         android:textSize="16sp"
         android:textStyle="bold" />
