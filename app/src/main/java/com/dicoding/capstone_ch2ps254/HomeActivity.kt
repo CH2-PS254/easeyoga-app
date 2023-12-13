@@ -13,6 +13,7 @@ import com.dicoding.capstone_ch2ps254.R.string
 import com.dicoding.capstone_ch2ps254.data.remote.ApiResponse
 import com.dicoding.capstone_ch2ps254.pose.ListViewModel
 import com.dicoding.capstone_ch2ps254.pose.PoseAdapter
+import com.dicoding.capstone_ch2ps254.user.UserActivity
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
@@ -46,9 +47,9 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun initAct() {
-//        binding.btnProfile.setOnClickListener {
-//            UserActivity.begin(this)
-//        }
+        binding.btnProfile.setOnClickListener {
+            UserActivity.begin(this)
+        }
     }
 
     private fun initUI() {
@@ -62,7 +63,7 @@ class HomeActivity : AppCompatActivity() {
                 is ApiResponse.Loading -> isLoading(true)
                 is ApiResponse.Success -> {
                     isLoading(false)
-                    val adapter = PoseAdapter(response.data.listPose)
+                    val adapter = PoseAdapter(response.data.data)
                     binding.rvItem.adapter = adapter
                 }
                 is ApiResponse.Error -> isLoading(false)

@@ -8,6 +8,6 @@ data class AuthResponse(
     val error: Boolean,
     @SerializedName("message")
     val message: String,
-    @SerializedName("loginResult")
-    val loginResult: User
+    @SerializedName("data")
+    val data: User
 )

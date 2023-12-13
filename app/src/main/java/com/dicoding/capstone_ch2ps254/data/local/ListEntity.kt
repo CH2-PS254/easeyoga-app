@@ -9,7 +9,12 @@ data class ListEntity(
 
         @ColumnInfo(name = "id")
         @PrimaryKey(autoGenerate = false)
-        val id: String,
+        val id: Int,
+        @ColumnInfo(name = "name")
+        val name: String,
+        @ColumnInfo(name = "description")
+        val description: String,
         @ColumnInfo(name = "image")
         val image: String
+
 )

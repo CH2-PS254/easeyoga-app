@@ -7,13 +7,11 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import com.dicoding.capstone_ch2ps254.HomeActivity
 import com.dicoding.capstone_ch2ps254.R.string
-import com.dicoding.capstone_ch2ps254.R
 import com.dicoding.capstone_ch2ps254.data.remote.ApiResponse
 import com.dicoding.capstone_ch2ps254.data.remote.authpack.Body
 import com.dicoding.capstone_ch2ps254.databinding.ActivityLoginBinding
 import com.dicoding.capstone_ch2ps254.register.RegistrationActivity
 import com.dicoding.capstone_ch2ps254.utils.Session
-import com.dicoding.capstone_ch2ps254.utils.ValManager.KEY_EMAIL
 import com.dicoding.capstone_ch2ps254.utils.ValManager.KEY_ISLOGIN
 import com.dicoding.capstone_ch2ps254.utils.ValManager.KEY_TOKEN
 import com.dicoding.capstone_ch2ps254.utils.ValManager.KEY_USER_ID
@@ -47,21 +45,21 @@ class LoginActivity : AppCompatActivity() {
 
     private fun initAct() {
         binding.buttonLogin.setOnClickListener {
-            val email = binding.editTextEmail.text.toString()
+            val username = binding.editTextName.text.toString()
             val password = binding.editTextPassword.text.toString()
 
             when {
-                email.isBlank() -> {
-                    binding.editTextEmail.requestFocus()
-                    binding.editTextEmail.error = getString(R.string.email_empty)
+                username.isBlank() -> {
+                    binding.editTextName.requestFocus()
+                    binding.editTextName.error = getString(string.email_empty)
                 }
                 password.isBlank() -> {
                     binding.editTextPassword.requestFocus()
-                    binding.editTextPassword.error = getString(R.string.pass_empty)
+                    binding.editTextPassword.error = getString(string.pass_empty)
                 }
                 else -> {
-                    val request = Body(email, password)
-                    loginUser(request, email)
+                    val request = Body(username, password)
+                    loginUser(request, username)
                 }
             }
         }
@@ -70,7 +68,7 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun loginUser(loginBody: Body, email: String) {
+    private fun loginUser(loginBody: Body, username: String) {
         loginViewModel.userLogin(loginBody).observe(this) { response ->
             when (response) {
                 is ApiResponse.Loading -> {
@@ -79,12 +77,14 @@ class LoginActivity : AppCompatActivity() {
                 is ApiResponse.Success -> {
                     try {
                         isLoading(false)
-                        val userRespon = response.data.loginResult
+                        val userRespon = response.data.data
                         pref.apply {
-                            setStringPreference(KEY_USER_ID, userRespon.userId)
+//                            setStringPreference(KEY_USER_ID, userRespon.id)
                             setStringPreference(KEY_TOKEN, userRespon.token)
-                            setStringPreference(KEY_USER_NAME, userRespon.name)
-                            setStringPreference(KEY_EMAIL, email)
+                            setStringPreference(KEY_USER_NAME, username)
+//                            setStringPreference(KEY_USER_ID, id)
+//                            setStringPreference(KEY_USER_NAME, username)
+//                            setStringPreference(KEY_EMAIL, email)
                             setBooleanPreference(KEY_ISLOGIN, true)
                         }
                     } finally {
@@ -103,8 +103,8 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun isLoading(isLoading: Boolean) {
-        binding.editTextEmail.isClickable = !isLoading
-        binding.editTextEmail.isEnabled = !isLoading
+        binding.editTextName.isClickable = !isLoading
+        binding.editTextName.isEnabled = !isLoading
         binding.editTextPassword.isClickable = !isLoading
         binding.editTextPassword.isEnabled = !isLoading
         binding.buttonLogin.isClickable = !isLoading

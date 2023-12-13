@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import com.dicoding.capstone_ch2ps254.utils.ValManager.KEY_EMAIL
 import com.dicoding.capstone_ch2ps254.utils.ValManager.KEY_ISLOGIN
 import com.dicoding.capstone_ch2ps254.utils.ValManager.KEY_TOKEN
+import com.dicoding.capstone_ch2ps254.utils.ValManager.KEY_USER_ID
 import com.dicoding.capstone_ch2ps254.utils.ValManager.KEY_USER_NAME
 import com.dicoding.capstone_ch2ps254.utils.ValManager.PREF_NAME
 
@@ -27,6 +28,7 @@ class Session(context: Context) {
     }
 
     val getToken = pref.getString(KEY_TOKEN, "")
+    val getid = pref.getString(KEY_USER_ID, "")
     val getUserName = pref.getString(KEY_USER_NAME, "")
     val getEmail = pref.getString(KEY_EMAIL, "")
     val isLogin = pref.getBoolean(KEY_ISLOGIN, false)

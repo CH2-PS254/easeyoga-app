@@ -25,13 +25,13 @@ class ListResource @Inject constructor(
                 val response = service.getList(token)
                 if (!response.error) {
                     dao.deleteAllList()
-                    val listList = response.listPose.map {
+                    val poses = response.data.map {
                         toListEntity(it)
                     }
-                    dao.insertList(listList)
+                    dao.insertList(poses)
                     emit(ApiResponse.Success(response))
                 } else {
-                    emit(ApiResponse.Error(response.message))
+                    emit(ApiResponse.Error(response.status))
                 }
             } catch (ex: Exception) {
                 emit(ApiResponse.Error(ex.message.toString()))

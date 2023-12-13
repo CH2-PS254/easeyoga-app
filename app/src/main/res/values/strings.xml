@@ -32,4 +32,10 @@
     <string name="dialog_error">Maaf Ada Kesalahan</string>
     <string name="statement_error">Kesalahan Tidak Diketahui</string>
     <string name="pass_error">Password Harus Lebih Dari 8 Huruf!</string>
+    <string name="logout">Logout</string>
+    <string name="profile">Profile</string>
+    <string name="logout_confirm">Apakah anda ingin keluar?</string>
+    <string name="logout_yes">Ya</string>
+    <string name="logout_no">Tidak</string>
+    <string name="welcome_massage">Welcome</string>
 </resources>

@@ -27,23 +27,23 @@
         android:text="@string/sub_welcome"
         android:textSize="14sp" />
 
-    <com.dicoding.capstone_ch2ps254.customview.EtEmail
-        android:id="@+id/editTextEmail"
+    <com.dicoding.capstone_ch2ps254.customview.EtName
+        android:id="@+id/editTextName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/textViewSubtitle"
         android:layout_marginTop="32dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:hint="@string/email"
-        android:inputType="textEmailAddress"
+        android:hint="@string/name"
+        android:inputType="textPersonName"
         android:autofillHints="Email" />
 
     <com.dicoding.capstone_ch2ps254.customview.EtPassword
         android:id="@+id/editTextPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/editTextEmail"
+        android:layout_below="@id/editTextName"
         android:layout_marginTop="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
