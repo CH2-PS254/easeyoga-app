@@ -25,8 +25,8 @@ class ListResource @Inject constructor(
                 val response = service.getList(token)
                 if (!response.error) {
                     dao.deleteAllList()
-                    val poses = response.data.map {
-                        toListEntity(it)
+                    val poses = response.data.poses.map { pose ->
+                        toListEntity(pose)
                     }
                     dao.insertList(poses)
                     emit(ApiResponse.Success(response))

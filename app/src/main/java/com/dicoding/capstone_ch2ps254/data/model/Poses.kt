@@ -6,6 +6,10 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Poses(
+    @SerializedName("error")
+    val error: Boolean,
+    @SerializedName("status")
+    val status: String,
     @SerializedName("id")
     val id: Int,
     @SerializedName("name")

@@ -63,7 +63,7 @@ class HomeActivity : AppCompatActivity() {
                 is ApiResponse.Loading -> isLoading(true)
                 is ApiResponse.Success -> {
                     isLoading(false)
-                    val adapter = PoseAdapter(response.data.data)
+                    val adapter = PoseAdapter(response.data.data.poses)
                     binding.rvItem.adapter = adapter
                 }
                 is ApiResponse.Error -> isLoading(false)

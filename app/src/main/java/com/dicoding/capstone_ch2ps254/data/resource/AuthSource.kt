@@ -39,7 +39,7 @@ class AuthSource @Inject constructor(private val authService: AuthService) {
                 if (!response.error) {
                     emit(ApiResponse.Success(response))
                 } else {
-                    emit(ApiResponse.Error(response.message))
+                    emit(ApiResponse.Error(response.status))
                 }
             } catch (ex: Exception) {
                 emit(ApiResponse.Error(ex.message.toString()))

@@ -1,6 +1,7 @@
 package com.dicoding.capstone_ch2ps254.data.remote.pose
 
-import com.dicoding.capstone_ch2ps254.data.model.Poses
+
+import com.dicoding.capstone_ch2ps254.data.model.PosesData
 import com.google.gson.annotations.SerializedName
 
 data class ListResponse(
@@ -9,5 +10,5 @@ data class ListResponse(
     @SerializedName("status")
     val status: String,
     @SerializedName("data")
-    val data: List<Poses>
+    val data: PosesData
 )
