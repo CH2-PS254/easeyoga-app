@@ -6,10 +6,12 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
+import androidx.core.app.ActivityOptionsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dicoding.capstone_ch2ps254.databinding.ActivityHomeBinding
 import com.dicoding.capstone_ch2ps254.utils.Session
 import com.dicoding.capstone_ch2ps254.R.string
+import com.dicoding.capstone_ch2ps254.camera.CameraActivity
 import com.dicoding.capstone_ch2ps254.data.remote.ApiResponse
 import com.dicoding.capstone_ch2ps254.pose.ListViewModel
 import com.dicoding.capstone_ch2ps254.pose.PoseAdapter
@@ -50,6 +52,9 @@ class HomeActivity : AppCompatActivity() {
         binding.btnProfile.setOnClickListener {
             UserActivity.begin(this)
         }
+//        binding.btnProfile.setOnClickListener {
+//            CameraActivity.begin(this)
+//        }
     }
 
     private fun initUI() {
@@ -65,6 +70,14 @@ class HomeActivity : AppCompatActivity() {
                     isLoading(false)
                     val adapter = PoseAdapter(response.data.data.poses)
                     binding.rvItem.adapter = adapter
+
+                    // Menangani klik item pada RecyclerView
+                    adapter.setOnItemClickListener(object : PoseAdapter.OnItemClickListener {
+
+                        override fun onItemClick(id: Int, name: String) {
+                            navigateToCameraActivity(id, name)
+                        }
+                    })
                 }
                 is ApiResponse.Error -> isLoading(false)
                 else -> {
@@ -103,6 +116,21 @@ class HomeActivity : AppCompatActivity() {
 //        }
 //        return super.onOptionsItemSelected(item)
 //    }
+
+    private fun navigateToCameraActivity(id: Int, name: String) {
+        // Membuka CameraActivity dan membawa data "id" dan "name"
+        val intent = Intent(this, CameraActivity::class.java)
+        intent.putExtra("id", id)
+        intent.putExtra("name", name)
+
+        // Menggunakan ActivityOptionsCompat untuk animasi transisi
+        val optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
+            this,
+            binding.rvItem, "rvItemTransition"
+        )
+
+        startActivity(intent, optionsCompat.toBundle())
+    }
 
     override fun onResume() {
         super.onResume()

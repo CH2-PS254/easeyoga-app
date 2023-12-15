@@ -1,19 +1,24 @@
 package com.dicoding.capstone_ch2ps254.pose
 
-import android.app.Activity
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.app.ActivityOptionsCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.dicoding.capstone_ch2ps254.data.model.Poses
 import com.dicoding.capstone_ch2ps254.databinding.ItemBinding
-import com.dicoding.capstone_ch2ps254.utils.ValManager
 import com.dicoding.capstone_ch2ps254.utils.extension.setImageUrl
-import androidx.core.util.Pair
-import com.dicoding.capstone_ch2ps254.HomeActivity
 
 class PoseAdapter (private val poseList: List<Poses>): RecyclerView.Adapter<PoseAdapter.PoseViewHolder>() {
+
+    interface OnItemClickListener {
+        fun onItemClick(id: Int, name: String)
+    }
+
+    private var listener: OnItemClickListener? = null
+
+    fun setOnItemClickListener(listener: OnItemClickListener) {
+        this.listener = listener
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PoseAdapter.PoseViewHolder {
         val binding = ItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return PoseViewHolder(binding)
@@ -35,16 +40,7 @@ class PoseAdapter (private val poseList: List<Poses>): RecyclerView.Adapter<Pose
                 imgPose.setImageUrl(poses.image, true)
             }
             itemView.setOnClickListener {
-                val intent = Intent(it.context, HomeActivity::class.java)
-                intent.putExtra(ValManager.KEY_PACK_POSE, poses)
-
-                val optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                    itemView.context as Activity,
-                    Pair(binding.imgPose, "image"),
-                    Pair(binding.tvTitle, "name"),
-                    Pair(binding.tvDesc, "description"),
-                )
-                itemView.context.startActivity(intent, optionsCompat.toBundle())
+                listener?.onItemClick(poses.id, poses.name)
             }
         }
     }
