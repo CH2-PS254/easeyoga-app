@@ -183,6 +183,7 @@ class CameraActivity : AppCompatActivity() {
 
         val outputs = model.process(inputFeature0)
         val outputFeature0 = outputs.outputFeature0AsTensorBuffer
+        Timber.d(outputFeature0.floatArray.contentToString())
 
         var mutable = bitmap.copy(Bitmap.Config.ARGB_8888, true)
         var canvas = Canvas(mutable)
