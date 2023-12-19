@@ -7,8 +7,8 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:layout_width="384dp"
-        android:layout_height="137dp"
+        android:layout_width="289dp"
+        android:layout_height="128dp"
         android:importantForAccessibility="no"
         android:src="@drawable/logoapp"
         app:layout_constraintBottom_toBottomOf="parent"

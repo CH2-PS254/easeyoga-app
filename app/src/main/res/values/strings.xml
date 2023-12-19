@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Capstone_CH2PS254</string>
+    <string name="app_name">Ease Yoga</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>

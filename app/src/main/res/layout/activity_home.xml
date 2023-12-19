@@ -20,15 +20,16 @@
 
     <ImageButton
         android:id="@+id/btnProfile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="8dp"
         android:backgroundTint="@android:color/transparent"
-        android:src="@drawable/ic_profile"
+        android:importantForAccessibility="no"
+        android:src="@drawable/ic_account"
         app:layout_constraintBottom_toBottomOf="@+id/tvName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tvName"
-        android:importantForAccessibility="no" />
+        tools:ignore="TouchTargetSizeCheck" />
 
     <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/flShimmer"

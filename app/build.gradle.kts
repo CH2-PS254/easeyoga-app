@@ -62,6 +62,7 @@ dependencies {
     implementation ("org.tensorflow:tensorflow-lite-metadata:0.1.0")
 
     implementation ("com.android.volley:volley:1.2.1")
+
     implementation ("com.github.bumptech.glide:glide:4.15.1")
     implementation ("com.facebook.shimmer:shimmer:0.5.0")
 
