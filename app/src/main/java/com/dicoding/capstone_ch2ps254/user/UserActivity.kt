@@ -5,6 +5,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
+import com.dicoding.capstone_ch2ps254.HomeActivity
 import com.dicoding.capstone_ch2ps254.R
 import com.dicoding.capstone_ch2ps254.databinding.ActivityUserBinding
 import com.dicoding.capstone_ch2ps254.login.LoginActivity
@@ -30,6 +31,17 @@ class UserActivity : AppCompatActivity() {
         pref = Session(this)
         initUI()
         initAct()
+
+        binding.btnback.setOnClickListener {
+            navigateToHomeActivity()
+        }
+    }
+
+    private fun navigateToHomeActivity() {
+        val intent = Intent(this, HomeActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        finish()
     }
 
     private fun initUI() {

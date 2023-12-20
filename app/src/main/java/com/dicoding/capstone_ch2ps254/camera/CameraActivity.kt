@@ -28,8 +28,10 @@ import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.support.image.ops.ResizeOp
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 import android.graphics.*
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import com.dicoding.capstone_ch2ps254.HomeActivity
 import com.dicoding.capstone_ch2ps254.R
 import com.dicoding.capstone_ch2ps254.ml.Posemodel
 import org.tensorflow.lite.Interpreter
@@ -73,6 +75,11 @@ class CameraActivity : AppCompatActivity() {
         setContentView(R.layout.activity_camera)
         Manifest.permission()
 
+        val btnBack: ImageButton = findViewById(R.id.btnback)
+        btnBack.setOnClickListener {
+            navigateToHomeActivity()
+        }
+
         imageProcessor = ImageProcessor.Builder().add(ResizeOp(192, 192, ResizeOp.ResizeMethod.BILINEAR)).build()
         model = AutoModel4.newInstance(this)
         model1 = Posemodel.newInstance(this)
@@ -108,6 +115,13 @@ class CameraActivity : AppCompatActivity() {
                 processAndDisplayFrame()
             }
         }
+    }
+
+    private fun navigateToHomeActivity() {
+        val intent = Intent(this, HomeActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        finish()
     }
 
 

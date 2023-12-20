@@ -1,109 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     tools:context=".camera.CameraActivity">
 
-    <TextureView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/textureView"/>
+    <ImageButton
+        android:id="@+id/btnback"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="@android:color/transparent"
+        android:importantForAccessibility="no"
+        android:src="@drawable/ic_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="TouchTargetSizeCheck" />
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#000"
-        android:id="@+id/imageView"/>
-
-    <Button
+    <TextView
+        android:id="@+id/tvName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Switch Camera"
-        android:id="@+id/btnSwitchCamera"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="16dp"/>
+        android:layout_margin="0dp"
+        android:text="@string/pose"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/btnback"
+        app:layout_constraintStart_toEndOf="@+id/btnback"
+        app:layout_constraintTop_toTopOf="@+id/btnback" />
 
-<!--    &lt;!&ndash; Tombol Back dengan icon &ndash;&gt;-->
-<!--    <ImageButton-->
-<!--        android:id="@+id/btnBack"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_alignParentStart="true"-->
-<!--        android:layout_alignParentTop="true"-->
-<!--        android:layout_marginStart="16dp"-->
-<!--        android:layout_marginTop="16dp"-->
-<!--        android:layout_marginEnd="16dp"-->
-<!--        android:layout_marginBottom="16dp"-->
-<!--        android:contentDescription="Back"-->
-<!--        android:src="@drawable/ic_back"-->
-<!--        android:background="@null" />-->
 
-<!--    &lt;!&ndash; TextView "Back to list yoga" &ndash;&gt;-->
-<!--    <TextView-->
-<!--        android:id="@+id/tvPoseName"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_alignBottom="@+id/btnBack"-->
-<!--        android:layout_marginStart="0dp"-->
-<!--        android:layout_marginTop="16dp"-->
-<!--        android:layout_marginBottom="2dp"-->
-<!--        android:layout_toEndOf="@+id/btnBack"-->
-<!--        android:text="Pose Name" />-->
+    <TextureView
+        android:id="@+id/textureView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnback" />
 
-<!--    <TextureView-->
-<!--        android:id="@+id/textureViewCamera"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:layout_below="@id/btnBack"-->
-<!--        android:layout_above="@+id/linearLayoutBottom"-->
-<!--        android:layout_marginStart="16dp"-->
-<!--        android:layout_marginTop="16dp"-->
-<!--        android:layout_marginEnd="16dp"-->
-<!--        android:layout_marginBottom="16dp"-->
-<!--        android:scaleType="fitXY" />-->
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnback"
+        android:background="#000"/>
 
-<!--    &lt;!&ndash; ImageView untuk menampilkan camera &ndash;&gt;-->
-<!--    <ImageView-->
-<!--        android:id="@+id/imageViewCamera"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:layout_above="@+id/linearLayoutBottom"-->
-<!--        android:layout_below="@id/btnBack"-->
-<!--        android:layout_alignParentStart="true"-->
-<!--        android:layout_alignParentEnd="true"-->
-<!--        android:layout_marginStart="16dp"-->
-<!--        android:layout_marginTop="16dp"-->
-<!--        android:layout_marginEnd="16dp"-->
-<!--        android:layout_marginBottom="16dp"-->
-<!--        android:scaleType="fitXY" />-->
+    <androidx.cardview.widget.CardView
+        android:layout_width="90dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        app:cardCornerRadius="5dp"
+        app:cardElevation="4dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textureView"
+        app:layout_constraintStart_toStartOf="@+id/textureView"
+        app:cardBackgroundColor="#F26522">
 
-<!--    &lt;!&ndash; LinearLayout untuk teks timer dan benar/salah &ndash;&gt;-->
-<!--    <LinearLayout-->
-<!--        android:id="@+id/linearLayoutBottom"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:orientation="horizontal"-->
-<!--        android:layout_alignParentBottom="true"-->
-<!--        android:layout_margin="16dp">-->
+        <TextView
+            android:id="@+id/tvTimer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/timer"
+            android:textSize="30sp"
+            android:textColor="#FFFFFF"/>
 
-<!--        &lt;!&ndash; Teks Timer &ndash;&gt;-->
-<!--        <TextView-->
-<!--            android:id="@+id/tvTimer"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_weight="1"-->
-<!--            android:text="Timer: 00:00"-->
-<!--            android:textSize="18sp"/>-->
+    </androidx.cardview.widget.CardView>
 
-<!--        &lt;!&ndash; Teks Benar/Salah &ndash;&gt;-->
-<!--        <TextView-->
-<!--            android:id="@+id/tvCorrectIncorrect"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_weight="1"-->
-<!--            android:text="Benar"-->
-<!--            android:textSize="18sp"/>-->
-<!--    </LinearLayout>-->
-</RelativeLayout>
+    <androidx.cardview.widget.CardView
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        app:cardCornerRadius="5dp"
+        app:cardElevation="4dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textureView"
+        app:layout_constraintEnd_toEndOf="@+id/textureView">
+
+        <TextView
+            android:id="@+id/tvResponse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/benar"
+            android:layout_gravity="center_horizontal"
+            android:textSize="30sp" />
+
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>
