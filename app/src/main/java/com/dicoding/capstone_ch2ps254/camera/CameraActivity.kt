@@ -28,20 +28,31 @@ import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.support.image.ops.ResizeOp
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 import android.graphics.*
-import android.os.Build
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.dicoding.capstone_ch2ps254.R
+import com.dicoding.capstone_ch2ps254.ml.Posemodel
+import org.tensorflow.lite.Interpreter
 import timber.log.Timber
-
+import java.io.FileInputStream
+import java.nio.ByteBuffer
+import java.nio.channels.FileChannel
+import kotlin.math.sqrt
+import kotlin.math.max
 
 @Suppress("DEPRECATION")
 class CameraActivity : AppCompatActivity() {
 
+    enum class Landmark {
+        NOSE, LEFT_EYE, RIGHT_EYE, LEFT_EAR, RIGHT_EAR, LEFT_SHOULDER, RIGHT_SHOULDER,
+        LEFT_ELBOW, RIGHT_ELBOW, LEFT_WRIST, RIGHT_WRIST, LEFT_HIP, RIGHT_HIP,
+        LEFT_KNEE, RIGHT_KNEE, LEFT_ANKLE, RIGHT_ANKLE
+    }
+
     private val CAMERA_PERMISSION_REQUEST_CODE = 101
-    val paint = Paint()
     lateinit var imageProcessor: ImageProcessor
     lateinit var model : AutoModel4
+    lateinit var model1 : Posemodel
     lateinit var bitmap: Bitmap
     lateinit var imageView: ImageView
     lateinit var handler: Handler
@@ -64,6 +75,7 @@ class CameraActivity : AppCompatActivity() {
 
         imageProcessor = ImageProcessor.Builder().add(ResizeOp(192, 192, ResizeOp.ResizeMethod.BILINEAR)).build()
         model = AutoModel4.newInstance(this)
+        model1 = Posemodel.newInstance(this)
         imageView = findViewById(R.id.imageView)
         textureView = findViewById(R.id.textureView)
         Timber.d("TextureView Initialized. Width: ${textureView.width}, Height: ${textureView.height}")
@@ -97,6 +109,7 @@ class CameraActivity : AppCompatActivity() {
             }
         }
     }
+
 
     override fun onDestroy() {
         super.onDestroy()
@@ -171,6 +184,7 @@ class CameraActivity : AppCompatActivity() {
         }
     }
 
+
     private fun processAndDisplayFrame() {
         bitmap = textureView.bitmap!!
         var tensorImage = TensorImage(DataType.UINT8)
@@ -204,6 +218,87 @@ class CameraActivity : AppCompatActivity() {
         imageView.setImageBitmap(mutable)
         Timber.d("TextureView Updated. Bitmap size: ${bitmap.width} x ${bitmap.height}")
         Timber.d("Output Feature0 flatSize: ${outputFeature0.flatSize}")
+
+        fun getCenterPoint(landmarks: FloatArray, leftBodypart: Landmark, rightBodypart: Landmark): FloatArray {
+            val left = landmarks[leftBodypart.ordinal * 2]
+            val right = landmarks[rightBodypart.ordinal * 2]
+            val center = FloatArray(2)
+            center[0] = left * 0.5f + right * 0.5f
+            return center
+        }
+
+        fun getPoseSize(landmarks: FloatArray, torsoSizeMultiplier: Float = 2.5f): Float {
+            val hipsCenter = getCenterPoint(landmarks, Landmark.LEFT_HIP, Landmark.RIGHT_HIP)
+            val shouldersCenter = getCenterPoint(landmarks, Landmark.LEFT_SHOULDER, Landmark.RIGHT_SHOULDER)
+            val torsoSize = sqrt(((shouldersCenter[0] - hipsCenter[0]) * (shouldersCenter[0] - hipsCenter[0]) +
+                    (shouldersCenter[1] - hipsCenter[1]) * (shouldersCenter[1] - hipsCenter[1])))
+            val poseCenterNew = getCenterPoint(landmarks, Landmark.LEFT_HIP, Landmark.RIGHT_HIP)
+            val dX = landmarks[0] - poseCenterNew[0]
+            val dY = landmarks[1] - poseCenterNew[1]
+            var maxDist = sqrt(dX * dX + dY * dY)
+            for (i in 2 until landmarks.size step 2) {
+                val distance = sqrt((landmarks[i] - poseCenterNew[0]) * (landmarks[i] - poseCenterNew[0]) +
+                        (landmarks[i + 1] - poseCenterNew[1]) * (landmarks[i + 1] - poseCenterNew[1]))
+                if (distance > maxDist) {
+                    maxDist = distance
+                }
+            }
+            val poseSize = max(torsoSize * torsoSizeMultiplier, maxDist)
+            return poseSize
+        }
+
+        fun normalizePoseLandmarks(landmarks: FloatArray): FloatArray {
+            val poseCenter = getCenterPoint(landmarks, Landmark.LEFT_HIP, Landmark.RIGHT_HIP)
+            val poseSize = getPoseSize(landmarks)
+            for (i in landmarks.indices step 2) {
+                landmarks[i] = (landmarks[i] - poseCenter[0]) / poseSize
+                landmarks[i + 1] = (landmarks[i + 1] - poseCenter[1]) / poseSize
+            }
+            return landmarks
+        }
+
+        fun landmarksToEmbedding(landmarksAndScores: FloatArray): FloatArray {
+            val landmarks = normalizePoseLandmarks(landmarksAndScores.copyOfRange(0, 34))
+            return landmarks
+        }
+
+        fun preprocessData(newInputData: FloatArray): FloatArray {
+            val processedNewInput = landmarksToEmbedding(newInputData)
+            return processedNewInput
+        }
+
+        fun performInferenceOnNewData(newInputData: FloatArray): FloatArray {
+            val interpreter = Interpreter(loadModelFileFromAssets("posemodel.tflite"))
+            val inputShape = interpreter.getInputTensor(0).shape() // Get the input shape
+            val inputBuffer = newInputData.copyOf(inputShape[1]) // Assuming input shape matches 1x51
+            val outputBuffer = Array(1) { FloatArray(9) }
+            interpreter.run(inputBuffer, outputBuffer)
+            return outputBuffer[0]
+        }
+
+
+        fun preprocessAndInfer(newInputData: FloatArray): FloatArray {
+            val processedInput = preprocessData(newInputData)
+            val predictions = performInferenceOnNewData(processedInput)
+            return predictions
+
+        }
+
+            val newInputData = (outputFeature0.floatArray)
+            val predictions = preprocessAndInfer(newInputData)
+            Timber.d(predictions.contentToString())
+
+
+    }
+
+    private fun loadModelFileFromAssets(modelFileName: String): ByteBuffer {
+        val assetManager = assets
+        val fileDescriptor = assetManager.openFd(modelFileName)
+        val inputStream = FileInputStream(fileDescriptor.fileDescriptor)
+        val fileChannel = inputStream.channel
+        val startOffset = fileDescriptor.startOffset
+        val declaredLength = fileDescriptor.declaredLength
+        return fileChannel.map(FileChannel.MapMode.READ_ONLY, startOffset, declaredLength)
     }
 
 
