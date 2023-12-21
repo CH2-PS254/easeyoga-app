@@ -14,9 +14,9 @@ will help users by detecting good and correct yoga poses.
 ## Table Of Content 
 - [Introduction](#introduction)
 - [Features](#features)
-- [Screenshots](#screenshots)
 - [Libraries](#libraries)
 - [Project Structure](#project-structure)
+- [Best Regards](#best-regards)
 
 ## Features 
 - Feature Authentication user for registration and login.
@@ -57,3 +57,14 @@ will help users by detecting good and correct yoga poses.
 - user
 - utils
   - extension
+
+## Best Regards 
+ | Name                    | Student ID    | Role                 |
+| ----------------------- | ------------- | -------------------- |
+| Rieva Putri Safa        | `M271BSX0186` | `Machine Learning`   |
+| Bill Kiki               | `M271BSY0289` | `Machine Learning`   |
+| Muhammad Nashir Akrom   | `M002BSY1729` | `Machine Learning`   |
+| Kent Liusudarso         | `C002BSY3042` | `Cloud Computing`    |
+| Fransiskus Davin Anwari | `C002BSY3369` | `Cloud Computing`    |
+| Ilham Ramadhan          | `A175BSY1937` | `Mobile Development` |
+| Raihan Alfiqri          | `A190BSY2951` | `Mobile Development` |
