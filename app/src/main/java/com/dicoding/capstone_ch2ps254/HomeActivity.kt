@@ -13,6 +13,7 @@ import com.dicoding.capstone_ch2ps254.utils.Session
 import com.dicoding.capstone_ch2ps254.R.string
 import com.dicoding.capstone_ch2ps254.camera.CameraActivity
 import com.dicoding.capstone_ch2ps254.data.remote.ApiResponse
+import com.dicoding.capstone_ch2ps254.login.LoginActivity
 import com.dicoding.capstone_ch2ps254.pose.ListViewModel
 import com.dicoding.capstone_ch2ps254.pose.PoseAdapter
 import com.dicoding.capstone_ch2ps254.user.UserActivity
@@ -37,10 +38,23 @@ class HomeActivity : AppCompatActivity() {
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        _activityHomeBinding = ActivityHomeBinding.inflate(layoutInflater)
-        setContentView(_activityHomeBinding?.root)
         pref = Session(this)
         token = pref.getToken
+
+        if (!pref.isLogin) {
+            LoginActivity.begin(this)
+            finish()
+            return
+        }
+
+        if (token.isNullOrEmpty() || !pref.isLogin) {
+            LoginActivity.begin(this)
+            finish()
+            return
+        }
+
+        _activityHomeBinding = ActivityHomeBinding.inflate(layoutInflater)
+        setContentView(_activityHomeBinding?.root)
 
         initAct()
         initUI()
@@ -52,9 +66,6 @@ class HomeActivity : AppCompatActivity() {
         binding.btnProfile.setOnClickListener {
             UserActivity.begin(this)
         }
-//        binding.btnProfile.setOnClickListener {
-//            CameraActivity.begin(this)
-//        }
     }
 
     private fun initUI() {
@@ -71,9 +82,7 @@ class HomeActivity : AppCompatActivity() {
                     val adapter = PoseAdapter(response.data.data.poses)
                     binding.rvItem.adapter = adapter
 
-                    // Menangani klik item pada RecyclerView
                     adapter.setOnItemClickListener(object : PoseAdapter.OnItemClickListener {
-
                         override fun onItemClick(id: Int, name: String) {
                             navigateToCameraActivity(id, name)
                         }
@@ -103,27 +112,11 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-//        menuInflater.inflate(R.menu.main_menu, menu)
-//        return true
-//    }
-
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        when(item.itemId) {
-//            R.id.Setting -> {
-//                startActivity(Intent(Settings.ACTION_LOCALE_SETTINGS))
-//            }
-//        }
-//        return super.onOptionsItemSelected(item)
-//    }
-
     private fun navigateToCameraActivity(id: Int, name: String) {
-        // Membuka CameraActivity dan membawa data "id" dan "name"
         val intent = Intent(this, CameraActivity::class.java)
         intent.putExtra("id", id)
         intent.putExtra("name", name)
 
-        // Menggunakan ActivityOptionsCompat untuk animasi transisi
         val optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
             this,
             binding.rvItem, "rvItemTransition"

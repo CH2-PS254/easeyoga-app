@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.activity.viewModels
 import com.dicoding.capstone_ch2ps254.R
 import com.dicoding.capstone_ch2ps254.data.remote.ApiResponse
@@ -17,6 +18,7 @@ import com.dicoding.capstone_ch2ps254.utils.extension.isEmailValid
 import com.dicoding.capstone_ch2ps254.utils.extension.showOKDialog
 import com.dicoding.capstone_ch2ps254.utils.extension.showToast
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class RegistrationActivity : AppCompatActivity() {
@@ -74,12 +76,22 @@ class RegistrationActivity : AppCompatActivity() {
                 is ApiResponse.Success -> {
                     try {
                         showLoading(false)
-                    } finally {
-                        LoginActivity.begin(this)
-                        finish()
                         showToast(getString(R.string.regist_succsess))
+                        Timber.d("RegistrationActivity", "Registration success.")
+
+                        val intent = Intent(this@RegistrationActivity, LoginActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        Timber.d("RegistrationActivity", "Starting LoginActivity.")
+                        startActivity(intent)
+                        Timber.d("RegistrationActivity", "Finishing RegistrationActivity.")
+                        finish()
+                    } finally {
+                        Timber.d("RegistrationActivity", "Registration success.")
                     }
                 }
+
+
+
                 is ApiResponse.Error -> {
                     showLoading(false)
                     showOKDialog(getString(R.string.dialog_error), response.errorMessage)

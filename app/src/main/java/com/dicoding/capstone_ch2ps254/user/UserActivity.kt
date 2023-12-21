@@ -48,7 +48,6 @@ class UserActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         title = getString(R.string.profile)
         binding.tvName.text = pref.getUserName
-//        binding.tvEmail.text = pref.getEmail
     }
 
     private fun initAct() {

@@ -29,10 +29,16 @@ import org.tensorflow.lite.support.image.ops.ResizeOp
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 import android.graphics.*
 import android.widget.ImageButton
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.dicoding.capstone_ch2ps254.HomeActivity
 import com.dicoding.capstone_ch2ps254.R
+import com.dicoding.capstone_ch2ps254.ml.MovenetThunder
+import com.dicoding.capstone_ch2ps254.ml.PoseEstimationModel1
+import com.dicoding.capstone_ch2ps254.ml.PoseEstimationModel2
+import com.dicoding.capstone_ch2ps254.ml.PoseEstimationModel3
+import com.dicoding.capstone_ch2ps254.ml.Poseestimation
 import com.dicoding.capstone_ch2ps254.ml.Posemodel
 import org.tensorflow.lite.Interpreter
 import timber.log.Timber
@@ -54,7 +60,7 @@ class CameraActivity : AppCompatActivity() {
     private val CAMERA_PERMISSION_REQUEST_CODE = 101
     lateinit var imageProcessor: ImageProcessor
     lateinit var model : AutoModel4
-    lateinit var model1 : Posemodel
+    lateinit var model1 : PoseEstimationModel2
     lateinit var bitmap: Bitmap
     lateinit var imageView: ImageView
     lateinit var handler: Handler
@@ -71,6 +77,18 @@ class CameraActivity : AppCompatActivity() {
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        val id = intent.getIntExtra("id", -1)
+        val name = intent.getStringExtra("name")
+
+        if (id != -1 && name != null) {
+            // Lakukan sesuatu dengan id dan name yang diterima
+            Timber.d("Received id: $id, name: $name")
+        } else {
+            // Lakukan sesuatu jika id atau name kosong
+            Timber.e("Error receiving id or name")
+        }
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_camera)
         Manifest.permission()
@@ -82,10 +100,10 @@ class CameraActivity : AppCompatActivity() {
 
         imageProcessor = ImageProcessor.Builder().add(ResizeOp(192, 192, ResizeOp.ResizeMethod.BILINEAR)).build()
         model = AutoModel4.newInstance(this)
-        model1 = Posemodel.newInstance(this)
+        model1 = PoseEstimationModel2.newInstance(this)
         imageView = findViewById(R.id.imageView)
         textureView = findViewById(R.id.textureView)
-        Timber.d("TextureView Initialized. Width: ${textureView.width}, Height: ${textureView.height}")
+//        Timber.d("TextureView Initialized. Width: ${textureView.width}, Height: ${textureView.height}")
 
         cameraManager = getSystemService(Context.CAMERA_SERVICE) as CameraManager
         handlerThread = HandlerThread("videoThread")
@@ -115,6 +133,7 @@ class CameraActivity : AppCompatActivity() {
                 processAndDisplayFrame()
             }
         }
+
     }
 
     private fun navigateToHomeActivity() {
@@ -210,6 +229,7 @@ class CameraActivity : AppCompatActivity() {
         inputFeature0.loadBuffer(tensorImage.buffer)
 
         val outputs = model.process(inputFeature0)
+
         val outputFeature0 = outputs.outputFeature0AsTensorBuffer
         Timber.d(outputFeature0.floatArray.contentToString())
 
@@ -282,10 +302,10 @@ class CameraActivity : AppCompatActivity() {
         }
 
         fun performInferenceOnNewData(newInputData: FloatArray): FloatArray {
-            val interpreter = Interpreter(loadModelFileFromAssets("posemodel.tflite"))
+            val interpreter = Interpreter(loadModelFileFromAssets("pose_estimation_model2.tflite"))
             val inputShape = interpreter.getInputTensor(0).shape() // Get the input shape
             val inputBuffer = newInputData.copyOf(inputShape[1]) // Assuming input shape matches 1x51
-            val outputBuffer = Array(1) { FloatArray(9) }
+            val outputBuffer = Array(1) { FloatArray(8) }
             interpreter.run(inputBuffer, outputBuffer)
             return outputBuffer[0]
         }
@@ -298,11 +318,45 @@ class CameraActivity : AppCompatActivity() {
 
         }
 
+        fun getMaxValueAndIndex(predictions: FloatArray): Pair<Float, Int> {
+            var maxValue = Float.MIN_VALUE
+            var maxIndex = -1
+
+            for ((index, value) in predictions.withIndex()) {
+                if (value > maxValue) {
+                    maxValue = value
+                    maxIndex = index+1
+                }
+            }
+
+            return Pair(maxValue, maxIndex)
+        }
+
             val newInputData = (outputFeature0.floatArray)
             val predictions = preprocessAndInfer(newInputData)
             Timber.d(predictions.contentToString())
 
+            val (maxValue, maxIndex) = getMaxValueAndIndex(predictions)
+            Timber.d("Max Value: $maxValue, Index of Max Value: $maxIndex")
 
+            val id = intent.getIntExtra("id", -1)
+            val desiredPoseID = id
+
+            fun checkValidity(predictions: FloatArray, threshold: Float, desiredIndex: Int): Boolean {
+            val (maxValue, maxIndex) = getMaxValueAndIndex(predictions)
+            return maxValue > threshold && maxIndex == desiredIndex
+            }
+
+        val threshold = 0.50f
+        val isValid = checkValidity(predictions, threshold, desiredPoseID)
+        val tvResponse: TextView = findViewById(R.id.tvResponse)
+        if (isValid) {
+            Timber.d("Pose is correct!")
+            tvResponse.text = getString(R.string.benar)
+        } else {
+            Timber.d("Pose is incorrect!")
+            tvResponse.text = getString(R.string.salah)
+        }
     }
 
     private fun loadModelFileFromAssets(modelFileName: String): ByteBuffer {
