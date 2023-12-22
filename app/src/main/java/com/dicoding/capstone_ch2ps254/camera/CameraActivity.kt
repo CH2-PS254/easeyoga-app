@@ -31,6 +31,7 @@ import android.graphics.*
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.camera.core.CameraSelector
 import androidx.core.content.ContextCompat
 import com.dicoding.capstone_ch2ps254.HomeActivity
 import com.dicoding.capstone_ch2ps254.R
@@ -58,6 +59,8 @@ class CameraActivity : AppCompatActivity() {
     }
 
     private val CAMERA_PERMISSION_REQUEST_CODE = 101
+
+
     lateinit var imageProcessor: ImageProcessor
     lateinit var model : AutoModel4
     lateinit var model1 : PoseEstimationModel2
@@ -103,7 +106,7 @@ class CameraActivity : AppCompatActivity() {
         model1 = PoseEstimationModel2.newInstance(this)
         imageView = findViewById(R.id.imageView)
         textureView = findViewById(R.id.textureView)
-//        Timber.d("TextureView Initialized. Width: ${textureView.width}, Height: ${textureView.height}")
+//        Timber.d("TextureView Initializaed. Width: ${textureView.width}, Height: ${textureView.height}")
 
         cameraManager = getSystemService(Context.CAMERA_SERVICE) as CameraManager
         handlerThread = HandlerThread("videoThread")
@@ -173,7 +176,7 @@ class CameraActivity : AppCompatActivity() {
             ) {
                 if (textureView.isAvailable) {
                     cameraManager.openCamera(
-                        cameraManager.cameraIdList[0],
+                        cameraManager.cameraIdList[1],
                         ContextCompat.getMainExecutor(this),
                         object : CameraDevice.StateCallback() {
                             override fun onOpened(camera: CameraDevice) {
@@ -216,7 +219,6 @@ class CameraActivity : AppCompatActivity() {
             Timber.e(e, "Error opening camera")
         }
     }
-
 
     private fun processAndDisplayFrame() {
         bitmap = textureView.bitmap!!
